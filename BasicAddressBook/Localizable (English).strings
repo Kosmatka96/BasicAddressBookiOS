@@ -1,0 +1,59 @@
+/* 
+  Localizable (English).strings
+  BasicAddressBook
+  
+*/
+
+// Menu options
+"Contact List"="Contact List";
+"Create Contact"="Create Contact";
+"Import All Contacts"="Import All Contacts";
+"Remove All Contacts"="Remove All Contacts";
+"Import Style"="Import Style";
+"Import as XML"="Import as XML";
+"Import as JSON"="Import as JSON";
+"Add Contact"="Add Contact";
+"Reset Entry"="Reset Entry";
+"Dismiss"="Dismiss";
+"Sort"="Sort";
+
+// Menu sorting options
+"Sort by Customer ID"="Sort by Customer ID";
+"Sort by Company Name"="Sort by Company Name";
+"Sort by Contact Name"="Sort by Contact Name";
+"Sort by Contact Title"="Sort by Contact Title";
+"Sort by Address"="Sort by Address";
+"Sort by City"="Sort by City";
+"Sort by Email"="Sort by Email";
+"Sort by Postal Code"="Sort by Postal Code";
+"Sort by Country"="Sort by Country";
+"Sort by Phone"="Sort by Phone";
+"Sort by Fax"="Sort by Fax";
+
+// Dialogue options
+"Please choose an option for this Contact"="Please choose an option for this Contact";
+"Contact Selected: %@"="Contact Selected: %@";
+"Contact Added"="Contact Added";
+"Duplicate Contact found!"="Duplicate Contact found!";
+"Update this contact or create duplicate? (update added to original instance)"="Update this contact or create duplicate? (update added to original instance)";
+"Navigate to contact list?"="Navigate to contact list?";
+
+// labels
+"Customer ID:"="Customer ID:";
+"Company Name:"="Company Name:";
+"Contact Name:"="Contact Name:";
+"Contact Title:"="Contact Title:";
+"Address:"="Address:";
+"City:"="City:";
+"Email:"="Email:";
+"Postal Code:"="Postal Code:";
+"Country:"="Country:";
+"Phone:"="Phone:";
+"Fax:"="Fax:";
+"There are no Contacts, import to add more"="There are no Contacts, import to add more";
+"Yes"="Yes";
+"No"="No";
+"Update"="Update";
+"Duplicate"="Duplicate";
+"Delete"="Delete";
+"Dismiss"="Dismiss";
