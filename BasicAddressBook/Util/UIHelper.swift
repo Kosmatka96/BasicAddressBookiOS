@@ -42,7 +42,7 @@ class UIHelper : NSObject {
     
   // Builds a UILabel with constrained width, text, and font while allowing height to be
   // stretched out as far as possible. Returns configured UILabel
-  func buildLabelWithWrappedHeight(pos: CGVector, text:String, font:UIFont, width:CGFloat) -> UILabel
+  func labelWithWrappedHeight(pos: CGVector, text:String, font:UIFont, width:CGFloat) -> UILabel
   {
     let height: CGFloat = getLabelHeight(text: text, font: font, width: width)
     let label: UILabel = UILabel(frame: CGRectMake(pos.dx, pos.dy, width, height))
@@ -50,7 +50,7 @@ class UIHelper : NSObject {
     label.lineBreakMode = NSLineBreakMode.byWordWrapping
     label.font = font
     label.text = text
-    label.sizeToFit()
+    //label.sizeToFit()
     return label
   }
     
@@ -102,6 +102,31 @@ class UIHelper : NSObject {
     return image;
   }
   
+  func menuButtonImage() -> UIImage {
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(44, 44), false, 0.0);
+    let aPath: UIBezierPath = UIBezierPath.init()
+    UIColor.white.setFill()
+    aPath.addArc(withCenter: CGPointMake(9, 22), radius: 3, startAngle: 0.radians, endAngle: 360.radians, clockwise: true)
+    aPath.addArc(withCenter: CGPointMake(18, 22), radius: 3, startAngle: 0.radians, endAngle: 360.radians, clockwise: true)
+    aPath.addArc(withCenter: CGPointMake(27, 22), radius: 3, startAngle: 0.radians, endAngle: 360.radians, clockwise: true)
+    aPath.fill()
+    let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!;
+    UIGraphicsEndImageContext();
+    return image;
+  }
+  
+  func menuButtonImageHighlighted() -> UIImage {
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(44, 44), false, 0.0);
+    let aPath: UIBezierPath = UIBezierPath.init()
+    UIColor.gray.setFill()
+    aPath.addArc(withCenter: CGPointMake(9, 22), radius: 3, startAngle: 0.radians, endAngle: 360.radians, clockwise: true)
+    aPath.addArc(withCenter: CGPointMake(18, 22), radius: 3, startAngle: 0.radians, endAngle: 360.radians, clockwise: true)
+    aPath.addArc(withCenter: CGPointMake(27, 22), radius: 3, startAngle: 0.radians, endAngle: 360.radians, clockwise: true)
+    aPath.fill()
+    let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!;
+    UIGraphicsEndImageContext();
+    return image;
+  }
   
 }
 

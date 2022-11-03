@@ -1,0 +1,12 @@
+{
+  "data" : [
+    {
+      "filename" : "resource_xml.xml",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

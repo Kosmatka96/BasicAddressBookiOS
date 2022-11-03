@@ -2,22 +2,54 @@
 //  CreateContactController.swift
 //  BasicAddressBook
 //
-//  Created by Vaughn Kosmatka on 10/31/22.
+//  Controller for the Contact List Screen
 //
 
 import Foundation
 import UIKit
 
-class CreateContactController : UIViewController {
+protocol CreateContactControllerDelegate : UISplitViewController {
+  func createContactControllerDidTapDrawer(_ createContactController: CreateContactController)
+}
+
+class CreateContactController : UIViewController, UIActionSheetDelegate, CreateContactViewDelegate {
   
-  var createContactView: CreateContactView?
+  var createContactView: CreateContactView!
+  var drawerDelegate: CreateContactControllerDelegate?
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    createContactView = CreateContactView(frame: CGRect(x: 0, y: 0,
-                                                    width: view.frame.size.width,
-                                                    height: view.frame.height))
-    view.addSubview(createContactView!)
+    createContactView = CreateContactView(frame: view.frame)
+    view = createContactView
+    createContactView.createContactControllerDelegate = self
+  }
+}
+
+extension CreateContactController {
+  func createContactViewDidTapDrawer(_ createContactView: CreateContactView) {
+    drawerDelegate?.createContactControllerDidTapDrawer(self)
+  }
+  
+  func createContactViewDidTapMenu(_ createContactView: CreateContactView) {
+    let mainAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+    mainAlert.addAction(UIAlertAction(title: NSLocalizedString("Add Contact", comment: ""),
+                                  style: .default , handler:{ (UIAlertAction)in
+        
+    }))
+    
+    mainAlert.addAction(UIAlertAction(title: NSLocalizedString("Reset Entry", comment: ""),
+                                  style: .destructive, handler:{ (UIAlertAction)in
+      
+    }))
+    
+    mainAlert.addAction(UIAlertAction(title: NSLocalizedString("Dismiss", comment: ""),
+                                  style: .cancel, handler:{ (UIAlertAction)in
+    }))
+
+    self.present(mainAlert, animated: true, completion: {
+      
+    })
   }
 }

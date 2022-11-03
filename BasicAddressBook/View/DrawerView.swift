@@ -16,11 +16,10 @@ class DrawerView: UIView, UITableViewDelegate, UITableViewDataSource {
   static let kMainMenuContactList: String = NSLocalizedString("Contact List", comment: "")
   static let kMainMenuCreateContact: String = NSLocalizedString("Create Contact", comment: "")
   let cellId: String = "cell_menu"
-  let indexPathKey: String = "key_index_path"
   var menuOptions = [kMainMenuContactList, kMainMenuCreateContact]
   var countOfContactsStr: String?
   var originalFrame: CGRect // the customized smaller bounds to contain menu panel
-  var menuTableView: UITableView?  // contains menu options
+  var menuTableView: UITableView!  // contains menu options
   weak var drawerDelegate: DrawerViewDelegate?
 
   
@@ -42,7 +41,7 @@ class DrawerView: UIView, UITableViewDelegate, UITableViewDataSource {
     addSubview(welcomeImageView)
     
     // Add a welcome label
-    let welcomeLabel: UILabel = UIHelper.shared.buildLabelWithWrappedHeight(
+    let welcomeLabel: UILabel = UIHelper.shared.labelWithWrappedHeight(
       pos: CGVector(dx: 20, dy: 0),
         text: "Basic Address Book by Theodore Kosmatka",
         font: UIFont.boldSystemFont(ofSize: 20),
@@ -52,18 +51,17 @@ class DrawerView: UIView, UITableViewDelegate, UITableViewDataSource {
                           changeView: welcomeLabel, topView: welcomeImageView)
     addSubview(welcomeLabel)
     
-    // Add tableView
+    // Add tableView for menu options
     menuTableView = UITableView(frame: CGRect(x: 0, y: 0, width: originalFrame.width, height: frame.height))
-    menuTableView?.isUserInteractionEnabled = true
-    menuTableView?.delegate = self
-    menuTableView?.dataSource = self
-    menuTableView?.backgroundColor = UIColor.blue
-    menuTableView?.autoresizingMask = AutoresizingMask.flexibleHeight
-    menuTableView?.tableHeaderView =
+    menuTableView.isUserInteractionEnabled = true
+    menuTableView.delegate = self
+    menuTableView.dataSource = self
+    menuTableView.backgroundColor = UIColor.blue
+    menuTableView.autoresizingMask = AutoresizingMask.flexibleHeight
+    menuTableView.tableHeaderView =
     UIView.init(frame: CGRect(x: 0, y: 0, width: originalFrame.width, height: 20))
-    UIHelper.shared.placeViewUnderWithPadding(padding: 20,
-                          changeView: menuTableView, topView: welcomeLabel)
-    addSubview(menuTableView!)
+    UIHelper.shared.placeViewUnderWithPadding(padding: 20, changeView: menuTableView, topView: welcomeLabel)
+    addSubview(menuTableView)
   }
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

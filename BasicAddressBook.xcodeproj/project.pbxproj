@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		312199A529131893007D91DD /* XmlHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312199A429131893007D91DD /* XmlHelper.swift */; };
+		312199AB291319FA007D91DD /* resource_json.json in Resources */ = {isa = PBXBuildFile; fileRef = 312199AA291319FA007D91DD /* resource_json.json */; };
+		312199AD29131A02007D91DD /* resource_xml.xml in Resources */ = {isa = PBXBuildFile; fileRef = 312199AC29131A02007D91DD /* resource_xml.xml */; };
+		312199B02913267E007D91DD /* ContactModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312199AF2913267E007D91DD /* ContactModel.swift */; };
 		31824C8F291037FC009F515E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31824C8E291037FC009F515E /* AppDelegate.swift */; };
 		31824C91291037FC009F515E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31824C90291037FC009F515E /* SceneDelegate.swift */; };
 		31824C93291037FC009F515E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31824C92291037FC009F515E /* ViewController.swift */; };
@@ -17,7 +21,6 @@
 		31824CA9291037FE009F515E /* BasicAddressBookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31824CA8291037FE009F515E /* BasicAddressBookTests.swift */; };
 		31824CB3291037FE009F515E /* BasicAddressBookUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31824CB2291037FE009F515E /* BasicAddressBookUITests.swift */; };
 		31824CB5291037FE009F515E /* BasicAddressBookUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31824CB4291037FE009F515E /* BasicAddressBookUITestsLaunchTests.swift */; };
-		31824CC629103860009F515E /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31824CC529103860009F515E /* RootViewController.swift */; };
 		31824CC829103876009F515E /* DrawerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31824CC729103876009F515E /* DrawerController.swift */; };
 		31824CCC29105722009F515E /* DrawerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31824CCB29105722009F515E /* DrawerView.swift */; };
 		31824CD0291064A5009F515E /* ContactCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31824CCF291064A5009F515E /* ContactCellView.swift */; };
@@ -25,7 +28,7 @@
 		31824CD429106D15009F515E /* CreateContactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31824CD329106D15009F515E /* CreateContactView.swift */; };
 		31824CD629106D24009F515E /* ContactListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31824CD529106D24009F515E /* ContactListController.swift */; };
 		31824CD829106D2D009F515E /* ContactListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31824CD729106D2D009F515E /* ContactListView.swift */; };
-		31824CDA29106D3C009F515E /* DatabaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31824CD929106D3C009F515E /* DatabaseHelper.swift */; };
+		31824CDA29106D3C009F515E /* DbHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31824CD929106D3C009F515E /* DbHelper.swift */; };
 		31824CDC291099D5009F515E /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31824CDB291099D5009F515E /* UIHelper.swift */; };
 		31824CDE2910A4B8009F515E /* Localizable (English).strings in Resources */ = {isa = PBXBuildFile; fileRef = 31824CDD2910A4B8009F515E /* Localizable (English).strings */; };
 /* End PBXBuildFile section */
@@ -48,6 +51,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		312199A429131893007D91DD /* XmlHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XmlHelper.swift; sourceTree = "<group>"; };
+		312199AA291319FA007D91DD /* resource_json.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = resource_json.json; sourceTree = "<group>"; };
+		312199AC29131A02007D91DD /* resource_xml.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = resource_xml.xml; sourceTree = "<group>"; };
+		312199AF2913267E007D91DD /* ContactModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactModel.swift; sourceTree = "<group>"; };
 		31824C8B291037FC009F515E /* BasicAddressBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BasicAddressBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		31824C8E291037FC009F515E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		31824C90291037FC009F515E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -62,7 +69,6 @@
 		31824CAE291037FE009F515E /* BasicAddressBookUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BasicAddressBookUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		31824CB2291037FE009F515E /* BasicAddressBookUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicAddressBookUITests.swift; sourceTree = "<group>"; };
 		31824CB4291037FE009F515E /* BasicAddressBookUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicAddressBookUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		31824CC529103860009F515E /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		31824CC729103876009F515E /* DrawerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerController.swift; sourceTree = "<group>"; };
 		31824CCB29105722009F515E /* DrawerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerView.swift; sourceTree = "<group>"; };
 		31824CCF291064A5009F515E /* ContactCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCellView.swift; sourceTree = "<group>"; };
@@ -70,7 +76,7 @@
 		31824CD329106D15009F515E /* CreateContactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateContactView.swift; sourceTree = "<group>"; };
 		31824CD529106D24009F515E /* ContactListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactListController.swift; sourceTree = "<group>"; };
 		31824CD729106D2D009F515E /* ContactListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactListView.swift; sourceTree = "<group>"; };
-		31824CD929106D3C009F515E /* DatabaseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseHelper.swift; sourceTree = "<group>"; };
+		31824CD929106D3C009F515E /* DbHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DbHelper.swift; sourceTree = "<group>"; };
 		31824CDB291099D5009F515E /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelper.swift; sourceTree = "<group>"; };
 		31824CDD2910A4B8009F515E /* Localizable (English).strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = "Localizable (English).strings"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -100,9 +106,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		312199AE2913266E007D91DD /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				312199AF2913267E007D91DD /* ContactModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		31824C82291037FC009F515E = {
 			isa = PBXGroup;
 			children = (
+				312199AC29131A02007D91DD /* resource_xml.xml */,
+				312199AA291319FA007D91DD /* resource_json.json */,
 				31824C8D291037FC009F515E /* BasicAddressBook */,
 				31824CA7291037FE009F515E /* BasicAddressBookTests */,
 				31824CB1291037FE009F515E /* BasicAddressBookUITests */,
@@ -123,6 +139,7 @@
 		31824C8D291037FC009F515E /* BasicAddressBook */ = {
 			isa = PBXGroup;
 			children = (
+				312199AE2913266E007D91DD /* Model */,
 				31824CC229103842009F515E /* View */,
 				31824CC12910383B009F515E /* Controller */,
 				31824CC42910384E009F515E /* Util */,
@@ -156,11 +173,10 @@
 		31824CC12910383B009F515E /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				31824CC529103860009F515E /* RootViewController.swift */,
+				31824CD529106D24009F515E /* ContactListController.swift */,
+				31824CD129106D01009F515E /* CreateContactController.swift */,
 				31824CC729103876009F515E /* DrawerController.swift */,
 				31824C92291037FC009F515E /* ViewController.swift */,
-				31824CD129106D01009F515E /* CreateContactController.swift */,
-				31824CD529106D24009F515E /* ContactListController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -168,10 +184,10 @@
 		31824CC229103842009F515E /* View */ = {
 			isa = PBXGroup;
 			children = (
-				31824CCB29105722009F515E /* DrawerView.swift */,
 				31824CCF291064A5009F515E /* ContactCellView.swift */,
-				31824CD329106D15009F515E /* CreateContactView.swift */,
 				31824CD729106D2D009F515E /* ContactListView.swift */,
+				31824CD329106D15009F515E /* CreateContactView.swift */,
+				31824CCB29105722009F515E /* DrawerView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -179,6 +195,7 @@
 		31824CC329103848009F515E /* Database */ = {
 			isa = PBXGroup;
 			children = (
+				31824CD929106D3C009F515E /* DbHelper.swift */,
 				31824C97291037FC009F515E /* BasicAddressBook.xcdatamodeld */,
 			);
 			path = Database;
@@ -189,8 +206,8 @@
 			children = (
 				31824C8E291037FC009F515E /* AppDelegate.swift */,
 				31824C90291037FC009F515E /* SceneDelegate.swift */,
-				31824CD929106D3C009F515E /* DatabaseHelper.swift */,
 				31824CDB291099D5009F515E /* UIHelper.swift */,
+				312199A429131893007D91DD /* XmlHelper.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -303,6 +320,8 @@
 				31824C9E291037FE009F515E /* LaunchScreen.storyboard in Resources */,
 				31824C9B291037FE009F515E /* Assets.xcassets in Resources */,
 				31824C96291037FC009F515E /* Main.storyboard in Resources */,
+				312199AD29131A02007D91DD /* resource_xml.xml in Resources */,
+				312199AB291319FA007D91DD /* resource_json.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,7 +346,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31824CC629103860009F515E /* RootViewController.swift in Sources */,
 				31824CD829106D2D009F515E /* ContactListView.swift in Sources */,
 				31824CCC29105722009F515E /* DrawerView.swift in Sources */,
 				31824C99291037FC009F515E /* BasicAddressBook.xcdatamodeld in Sources */,
@@ -336,11 +354,13 @@
 				31824C93291037FC009F515E /* ViewController.swift in Sources */,
 				31824CDC291099D5009F515E /* UIHelper.swift in Sources */,
 				31824C8F291037FC009F515E /* AppDelegate.swift in Sources */,
+				312199B02913267E007D91DD /* ContactModel.swift in Sources */,
 				31824CD229106D01009F515E /* CreateContactController.swift in Sources */,
-				31824CDA29106D3C009F515E /* DatabaseHelper.swift in Sources */,
+				31824CDA29106D3C009F515E /* DbHelper.swift in Sources */,
 				31824CD429106D15009F515E /* CreateContactView.swift in Sources */,
 				31824CD629106D24009F515E /* ContactListController.swift in Sources */,
 				31824C91291037FC009F515E /* SceneDelegate.swift in Sources */,
+				312199A529131893007D91DD /* XmlHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

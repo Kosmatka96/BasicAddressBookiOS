@@ -13,12 +13,10 @@ class ViewController: UIViewController {
     super.viewDidLoad()
     
     let mainVC = UIViewController()
-    mainVC.view.backgroundColor = .white
+    mainVC.view.backgroundColor = .clear
     
-    let rootController = RootViewController(mainViewController: mainVC, topNavigationLeftImage: UIImage(named: "hamburger-menu-icon"))
-    
-    let drawerVC = DrawerController(rootViewController: rootController)
-    self.addChild(drawerVC)
+    let drawerVC = DrawerController(mainViewController: mainVC)
+    addChild(drawerVC)
     view.addSubview(drawerVC.view)
     drawerVC.didMove(toParent: self)
   }
