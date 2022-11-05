@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ContactModel {
+struct ContactModel : Decodable {
   var customerId: String?
   var companyName: String?
   var contactName: String?
@@ -19,7 +19,7 @@ struct ContactModel {
   var country: String?
   var phone: String?
   var fax: String?
-  var groupId: Int64 = 0
+  var groupId: Int64 = 1
   
   init(details: [String: Any]) {
     let tagCustomerId = "CustomerID"
@@ -45,6 +45,10 @@ struct ContactModel {
     self.country = details[tagCountry] as? String ?? ""
     self.phone = details[tagPhone] as? String ?? ""
     self.fax = details[tagFax] as? String ?? ""
+  }
+  
+  init() {
+    
   }
   
   init(c: Contact) {

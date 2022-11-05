@@ -17,7 +17,7 @@ class XMLHelper: NSObject, XMLParserDelegate {
   var currentElement = ""
   
   func loadFromResource() -> Array<ContactModel> {
-    let xmlResponseData = Bundle.main.getFileData("resource_xml.xml")
+    let xmlResponseData = Bundle.main.getFileData(DbHelper.filePathXmlResource)
     let parser = XMLParser(data: xmlResponseData)
     parser.delegate = self
     parser.parse()
@@ -28,6 +28,7 @@ class XMLHelper: NSObject, XMLParserDelegate {
   {
     if elementName == "AddressBook" {
       contactList.removeAll()
+      xmlDictArr.removeAll()
     }
     else if elementName == DbHelper.tagContact {
       xmlDict = [:]

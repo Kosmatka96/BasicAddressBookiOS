@@ -19,18 +19,6 @@ extension BinaryFloatingPoint {
 class UIHelper : NSObject {
     static let shared = UIHelper()
   
-  // Helper method to make it easier to assign width
-  func setViewWidth(view: UIView, width: CGFloat) {
-    view.frame = CGRect(x: view.frame.origin.x, y: view.frame.origin.y,
-                        width: width, height: view.frame.size.height)
-  }
-  
-  // Helper method to make it easier to assign origin X
-  func setViewX(view: UIView, originX: CGFloat) {
-    view.frame = CGRect(x: originX, y: view.frame.origin.y,
-                        width: view.frame.size.width, height: view.frame.size.height)
-  }
-  
   // Estimates UILabel height based on label parameters
   func getLabelHeight(text:String, font:UIFont, width:CGFloat) -> CGFloat {
     let size = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
@@ -53,20 +41,39 @@ class UIHelper : NSObject {
     //label.sizeToFit()
     return label
   }
+  
+  func getStandardContainerView(cFrame: CGRect) -> UIView {
+    //create view
+    let containerView = UIView.init(frame: cFrame)
+    containerView.isUserInteractionEnabled = true
+    //containerView.layer.borderColor = .init(gray: 0, alpha: 0)
+    containerView.backgroundColor = .white
+    //add a drop shadow
+    containerView.layer.cornerRadius = 8.0;
+    containerView.layer.masksToBounds = false;
+    containerView.layer.shadowColor = .init(red: 0, green: 0, blue: 0, alpha: 1)
+    containerView.layer.shadowOpacity = 1.0;
+    containerView.layer.shadowRadius = 3.0;
+    containerView.layer.shadowOffset = CGSizeMake(0.5, 0.5);
+    containerView.layer.shadowPath = UIBezierPath.init(rect: containerView.bounds).cgPath
+    containerView.layer.shouldRasterize = true;
+    containerView.layer.rasterizationScale = UIScreen.main.scale
+    // add a background selection view to color taps later
+    let selectionSquare: UIView = UIView.init(frame: CGRect.zero)
+    selectionSquare.isUserInteractionEnabled = false
+    selectionSquare.backgroundColor = .clear
+    selectionSquare.alpha = 0.5
+    containerView.addSubview(selectionSquare)
     
-  // Places changeView under topView with some padding. Adjusts with topView height, and y pos
-  func placeViewUnderWithPadding(padding: CGFloat, changeView: UIView?, topView: UIView?) {
-    if (changeView != nil && topView != nil) {
-      let maxY: CGFloat = (topView?.frame.maxY)!
-      let newYPos = maxY + padding
-      let curX = (changeView?.frame.origin.x)!
-      let curWidth = (changeView?.frame.size.width)!
-      let curHeight = (changeView?.frame.size.height)!
-      changeView?.frame = CGRectMake(curX, newYPos, curWidth, curHeight)
-    }
-    else {
-      NSLog("[ERROR]: cannot place UI Label under, UILabel = nil!")
-    }
+    return containerView
+  }
+  
+  func resizeStandardContainerView(view: UIView, frame: CGRect) {
+    view.frame = frame
+    view.layer.shadowPath = UIBezierPath.init(rect: view.bounds).cgPath
+    // wrap selection square to fit new container
+    // [0] will always be the selectionSquare if using a standard container view
+    view.subviews[0].frame = CGRect(origin: CGPoint(x: 0, y: 0), size: view.frame.size)
   }
     
   func contactListImage() -> UIImage {
@@ -130,3 +137,73 @@ class UIHelper : NSObject {
   
 }
 
+extension UIView {
+  // Helper method to make it easier to assign different parts of a views frame
+  func setX(originX: CGFloat) {
+    frame = CGRect(x: originX, y: frame.origin.y, width: frame.size.width, height: frame.size.height)
+  }
+  func setY(_ y: CGFloat) {
+    frame = CGRectMake(frame.origin.x, y, frame.width, frame.height)
+  }
+  func setWidth(width: CGFloat) {
+    frame = CGRect(x: frame.origin.x, y: frame.origin.y, width: width, height: frame.size.height)
+  }
+  func setHeight(height: CGFloat) {
+    frame = CGRect(x: frame.origin.x, y: frame.origin.y, width: frame.size.width, height: height)
+  }
+  
+  // Places view under another view with some padding
+  func setUnderView(_ topView: UIView?, withPadding: CGFloat) {
+    if (topView != nil) {
+      let newYPos = (topView?.frame.maxY)! + withPadding
+      setY(newYPos)
+    }
+    else { NSLog("[ERROR]: cannot place View under, as topView is nil!") }
+  }
+  
+  func animateButtonExpand() {
+    UIView.animate(withDuration: 0.2, delay: 0.0) {
+      self.transform = CGAffineTransformMakeScale(2.2, 2.2);
+    }
+    UIView.animate(withDuration: 0.1, delay: 0.2) {
+      self.transform = CGAffineTransformMakeScale(1.0,1.0);
+    }
+  }
+  
+  func animateTap() {
+    UIView.animate(withDuration: 0.115, delay: 0.0) {
+      self.transform = CGAffineTransformMakeScale(0.915,0.915);
+    }
+    UIView.animate(withDuration: 0.115, delay: 0.115) {
+      self.transform = CGAffineTransformMakeScale(1.0,1.0);
+    }
+  }
+  
+  func animateTapWithColor(selectColor: UIColor) {
+    let originalColor = backgroundColor
+    UIView.animate(withDuration: 0.115, delay: 0.0) {
+      self.transform = CGAffineTransformMakeScale(0.915,0.915);
+      self.backgroundColor = selectColor
+    }
+    UIView.animate(withDuration: 0.115, delay: 0.115) {
+      self.transform = CGAffineTransformMakeScale(1.0,1.0);
+    }
+    UIView.animate(withDuration: 0, delay: 0.23) {
+      self.backgroundColor = originalColor
+    }
+  }
+  
+  func animateTapWithSubSelectionView(subSelectionView: UIView, selectColor: UIColor) {
+    let originalColor = subSelectionView.backgroundColor
+    UIView.animate(withDuration: 0.115, delay: 0.0) {
+      self.transform = CGAffineTransformMakeScale(0.915,0.915);
+      subSelectionView.backgroundColor = selectColor
+    }
+    UIView.animate(withDuration: 0.115, delay: 0.115) {
+      self.transform = CGAffineTransformMakeScale(1.0,1.0);
+    }
+    UIView.animate(withDuration: 0, delay: 0.23) {
+      subSelectionView.backgroundColor = originalColor
+    }
+  }
+}

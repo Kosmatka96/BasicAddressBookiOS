@@ -11,21 +11,13 @@ import UIKit
 protocol CreateContactViewDelegate: UIViewController {
   func createContactViewDidTapDrawer(_ createContactView: CreateContactView)
   func createContactViewDidTapMenu(_ createContactView: CreateContactView)
+  func openAlertToEditLabel( _ label: UILabel)
 }
 
-class CreateContactView : UIView {
-  var customerIdLabel : UILabel?
-  var companyNameLabel : UILabel?
-  var contactNameLabel : UILabel?
-  var contactTitleLabel : UILabel?
-  var addressLabel : UILabel?
-  var cityLabel : UILabel?
-  var emailLabel : UILabel?
-  var postalCodeLabel : UILabel?
-  var countryLabel : UILabel?
-  var phoneLabel : UILabel?
-  var faxLabel : UILabel?
-  var lWidth: CGFloat
+class CreateContactView : UIView, ContactSingleCellViewDelegate {
+  
+  var cellView: ContactCellView!
+  var scrollView: UIScrollView!
   
   weak var createContactControllerDelegate: CreateContactViewDelegate?
     
@@ -34,7 +26,7 @@ class CreateContactView : UIView {
   }
   
   override init (frame : CGRect) {
-    lWidth = frame.size.width*0.5
+  
     super.init(frame : frame)
     backgroundColor = .white
     
@@ -72,55 +64,47 @@ class CreateContactView : UIView {
     drawerButton.addTarget(self, action: #selector(self.didTapDrawer(_:)), for: UIControl.Event.touchUpInside)
     addSubview(drawerButton)
     
-    // build labels and prelabels, and add them to the view while getting handles for the editable labels
-    customerIdLabel = getRowLabel(preLabelText: NSLocalizedString("Customer ID:", tableName: nil, comment: ""), column: 1)
-    companyNameLabel = getRowLabel(preLabelText: NSLocalizedString("Company Name:", tableName: nil, comment: ""),column: 2)
-    contactNameLabel = getRowLabel(preLabelText: NSLocalizedString("Contact Name:", tableName: nil, comment: ""),column: 3)
-    contactTitleLabel = getRowLabel(preLabelText: NSLocalizedString("Contact Title:", tableName: nil, comment: ""),column: 4)
-    addressLabel = getRowLabel(preLabelText: NSLocalizedString("Address:", tableName: nil, comment: ""),column: 5)
-    cityLabel = getRowLabel(preLabelText: NSLocalizedString("City:", tableName: nil, comment: ""),column: 6)
-    emailLabel = getRowLabel(preLabelText: NSLocalizedString("Email:", tableName: nil, comment: ""),column: 7)
-    postalCodeLabel = getRowLabel(preLabelText: NSLocalizedString("Postal Code:", tableName: nil, comment: ""),column: 8)
-    countryLabel = getRowLabel(preLabelText: NSLocalizedString("Country:", tableName: nil, comment: ""),column: 9)
-    phoneLabel = getRowLabel(preLabelText: NSLocalizedString("Phone:", tableName: nil, comment: ""),column: 10)
-    faxLabel = getRowLabel(preLabelText: NSLocalizedString("Fax:", tableName: nil, comment: ""),column: 11)
+    // Add scroll view as contact fields might overcome screen bounds
+    scrollView = UIScrollView.init(frame: frame)
+    scrollView.setUnderView(topBannerView, withPadding: 0)
+    scrollView.setHeight(height: frame.height - topBannerView.frame.maxY)
+    scrollView.isUserInteractionEnabled = true
+    addSubview(scrollView)
     
-    // set specific labels to have different colors
-    addressLabel?.textColor = UIColor.purple
-    emailLabel?.textColor = UIColor.green
-    phoneLabel?.textColor = UIColor.blue
+    // Configure Single Contact Cell View
+    ContactCellView.lWidth = frame.size.width * 0.45; // required override for margins
+    cellView = ContactCellView(createView: self)
+    cellView.createViewDelegate = self
+    let mockContact: ContactModel = ContactModel()
+    cellView.renderCellWithContact(contact: mockContact)
+    cellView.setY(10)
+    scrollView.addSubview(cellView)
+  }
+  
+  public func getCurrentContact() -> ContactModel {
+    return cellView.relatedContact ?? ContactModel()
+  }
+  
+  public func updateWithContact(contact: ContactModel) {
+    cellView.renderCellWithContact(contact: contact)
+    scrollView.contentSize = CGSize(width: frame.width, height: cellView.getMaxHeightOfCell() + 50)
   }
   
   @objc func didTapMenu(_ sender: UIButton!) { handleMenuTap() }
   
   @objc func didTapDrawer(_ sender: UIButton!) { handleDrawerTap() }
-  
-  private func getRowLabel(preLabelText: String, column: CGFloat) -> UILabel {
-      let yPos = 3*column
-      
-      let preLabel: UILabel = UILabel(frame: CGRect(x: 0, y: yPos, width: lWidth, height: 22))
-      preLabel.textAlignment = NSTextAlignment.right
-      preLabel.textColor = UIColor.gray
-      preLabel.font = UIFont.systemFont(ofSize: 18)
-      addSubview(preLabel)
-      
-      let label: UILabel = UILabel(frame: CGRect(x: lWidth, y: yPos, width: lWidth, height: 22))
-      label.textAlignment = NSTextAlignment.left
-      label.textColor = UIColor.darkGray
-      label.font = UIFont.boldSystemFont(ofSize: 18)
-      addSubview(label)
-      return label
-  }
-    
 }
 
 extension CreateContactView {
-  @objc
-  fileprivate func handleDrawerTap() {
+  @objc fileprivate func handleDrawerTap() {
     createContactControllerDelegate?.createContactViewDidTapDrawer(self)
   }
-  fileprivate func handleMenuTap() {
+  @objc fileprivate func handleMenuTap() {
     createContactControllerDelegate?.createContactViewDidTapMenu(self)
+  }
+  
+  func didTapEditButton(relatedLabel: UILabel) {
+    createContactControllerDelegate?.openAlertToEditLabel(relatedLabel)
   }
 }
 

@@ -33,7 +33,7 @@ class DrawerView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     // override view color and width
     backgroundColor = UIColor.systemBlue
-    UIHelper.shared.setViewWidth(view: self, width: originalFrame.width)
+    self.setWidth(width: originalFrame.width)
     
     // Add a welcome image
     let welcomeImageView: UIImageView = UIImageView(image: UIImage(named: "address-icon"))
@@ -47,8 +47,7 @@ class DrawerView: UIView, UITableViewDelegate, UITableViewDataSource {
         font: UIFont.boldSystemFont(ofSize: 20),
         width: originalFrame.width)
     welcomeLabel.textColor = UIColor.white
-    UIHelper.shared.placeViewUnderWithPadding(padding: 15,
-                          changeView: welcomeLabel, topView: welcomeImageView)
+    welcomeLabel.setUnderView(welcomeImageView, withPadding: 15)
     addSubview(welcomeLabel)
     
     // Add tableView for menu options
@@ -60,7 +59,7 @@ class DrawerView: UIView, UITableViewDelegate, UITableViewDataSource {
     menuTableView.autoresizingMask = AutoresizingMask.flexibleHeight
     menuTableView.tableHeaderView =
     UIView.init(frame: CGRect(x: 0, y: 0, width: originalFrame.width, height: 20))
-    UIHelper.shared.placeViewUnderWithPadding(padding: 20, changeView: menuTableView, topView: welcomeLabel)
+    menuTableView.setUnderView(welcomeLabel, withPadding: 20)
     addSubview(menuTableView)
   }
   
@@ -126,15 +125,13 @@ class DrawerView: UIView, UITableViewDelegate, UITableViewDataSource {
   }
   
   func updateLayout(isMenuExpanded: Bool) {
-    let originX: CGFloat = (isMenuExpanded) ? 0 : -originalFrame.width*2
-    UIHelper.shared.setViewX(view: self, originX: originX)
+    self.setX(originX:  (isMenuExpanded) ? 0 : -originalFrame.width*2)
   }
   
   func animateLayout(isMenuExpanded: Bool) {
-    let originX: CGFloat = (isMenuExpanded) ? 0 : -originalFrame.width
     UIView.animate(withDuration: 0.3, animations: { [self] in
       self.layoutIfNeeded()
-      UIHelper.shared.setViewX(view: self, originX: originX)
+      self.setX(originX: (isMenuExpanded) ? 0 : -originalFrame.width)
     }) { (success) in }
   }
     

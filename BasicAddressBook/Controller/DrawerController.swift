@@ -89,8 +89,19 @@ extension DrawerController {
     toggleMenu()
   }
   
+  func contactListControllerUpdateContact(_ contact: ContactModel) {
+    toggleMenu()
+    menuOptionSelectedInDrawerView(optionTitle: DrawerView.kMainMenuCreateContact)
+    createContactController.updateWithPassedContact(contact)
+  }
+  
   func createContactControllerDidTapDrawer(_ createContactController: CreateContactController) {
     toggleMenu()
+  }
+  
+  func createContactControllerDidAddContact(_ createContactController: CreateContactController) {
+    toggleMenu()
+    menuOptionSelectedInDrawerView(optionTitle: DrawerView.kMainMenuContactList)
   }
   
   func menuOptionSelectedInDrawerView(optionTitle: String) {

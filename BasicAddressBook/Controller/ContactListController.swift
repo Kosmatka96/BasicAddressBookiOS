@@ -7,31 +7,50 @@
 
 import Foundation
 import UIKit
+import MessageUI
+import CoreLocation
+import MapKit
 
 protocol ContactListControllerDelegate : UISplitViewController {
   func contactListControllerDidTapDrawer(_ contactListController: ContactListController)
+  func contactListControllerUpdateContact(_ contact: ContactModel)
 }
 
-class ContactListController : UIViewController, UIActionSheetDelegate, ContactListViewDelegate {
+class ContactListController : UIViewController, UIActionSheetDelegate, ContactListViewDelegate,
+                              MFMailComposeViewControllerDelegate {
 
   var drawerDelegate: ContactListControllerDelegate?
   var contactListView: ContactListView!
   var contactListData: Array<ContactModel> = []
-  var sortPreference: String = DbHelper.tagCustomerId
-  var importStylePreference: String = DbHelper.importStyleXML
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    // apply default value for sorting preference
+    let savedSortPref = UserDefaults.standard.string(forKey: DbHelper.keySortPreference)
+    if (savedSortPref == nil) {
+      UserDefaults.standard.set(DbHelper.tagCustomerId, forKey: DbHelper.keySortPreference)
+    }
+    
+    // apply default value for import style preference
+    let savedImportPref = UserDefaults.standard.string(forKey: DbHelper.keyImportTypePreference)
+    if (savedImportPref == nil) {
+      UserDefaults.standard.set(DbHelper.importStyleXML, forKey: DbHelper.keyImportTypePreference)
+    }
+    
+    // create custom view and pass delegate to handle menu options
     contactListView = ContactListView(frame: view.frame)
     view = contactListView
     contactListView.contactListControllerDelegate = self
-    contactListView.updateContactListData(data: contactListData)
   }
   
-  func refreshListTable() {
+  override func viewWillAppear(_ animated: Bool) {
+    refreshListTable(filterBy: nil)
+  }
+  
+  func refreshListTable(filterBy: String?) {
     // replace list with new fetch from database, keeping in mind current ordering
-    contactListData = DbHelper.shared.getAllContactsAsObjects(orderBy: self.sortPreference)
+    contactListData = DbHelper.shared.getAllContactsAsObjects(filterBy: filterBy)
     contactListView.updateContactListData(data: contactListData) // signal tableView to update with our new list
   }
   
@@ -42,11 +61,106 @@ class ContactListController : UIViewController, UIActionSheetDelegate, ContactLi
     contactListView.updateContactListData(data: nil)
   }
   
+  func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+    if let _ = error {
+       self.dismiss(animated: true, completion: nil)
+    }
+    switch result {
+       case .cancelled:
+       print("Cancelled")
+       break
+       case .sent:
+       print("Mail sent successfully")
+       break
+       case .failed:
+       print("Sending mail failed")
+       break
+       default:
+       break
+    }
+    controller.dismiss(animated: true, completion: nil)
+  }
+  
 }
 
 extension ContactListController {
+  
+  func contactListViewSearchTextChanged(_ contactListView: ContactListView, text: String) {
+    refreshListTable(filterBy: text)
+  }
+  
   func contactListViewDidTapDrawer(_ contactListView: ContactListView) {
     drawerDelegate?.contactListControllerDidTapDrawer(self)
+  }
+  
+  func didTapContact(contact: ContactModel) {
+    let contactId: String = String(format: "%@ (#%d)", contact.customerId!, contact.groupId)
+    let alertTitle = NSLocalizedString("Contact Selected: \(contactId)", comment: "")
+    let alertMessage = NSLocalizedString("Please choose an option for this Contact", comment: "")
+    let alertController:UIAlertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: UIAlertController.Style.alert)
+    
+    let updateAction:UIAlertAction = UIAlertAction(title: NSLocalizedString("Update", comment: ""), style: UIAlertAction.Style.default) { UIAlertAction in
+      self.drawerDelegate?.contactListControllerUpdateContact(contact)
+    }
+    
+    let deleteAction:UIAlertAction = UIAlertAction(title: "Delete", style: UIAlertAction.Style.destructive) { UIAlertAction in
+      DbHelper.shared.deleteContactFromDatabase(contact)
+      self.refreshListTable(filterBy: nil)
+    }
+    
+    let dismissAction:UIAlertAction = UIAlertAction(title: "Dismiss", style: UIAlertAction.Style.default) { UIAlertAction in
+      
+    }
+    
+    alertController.addAction(updateAction)
+    alertController.addAction(deleteAction)
+    alertController.addAction(dismissAction)
+    present(alertController, animated: true)
+  }
+  
+  func didTapEmail(email: String) {
+    if (!email.isEmpty) {
+      if MFMailComposeViewController.canSendMail() {
+            let mail = MFMailComposeViewController()
+            mail.setToRecipients(["\(email)"])
+            mail.setSubject("Sample Subject")
+            mail.setMessageBody("Sample Body", isHTML: true)
+            mail.mailComposeDelegate = self
+            present(mail, animated: true)
+      }
+      else { print("[ERROR]: Email cannot be sent") }
+    }
+  }
+  
+  func didTapPhone(phone: String) {
+    if (!phone.isEmpty) {
+      if let url = URL(string: "tel://\(phone)"), UIApplication.shared.canOpenURL(url) {
+          if #available(iOS 10, *) {
+              UIApplication.shared.open(url)
+          } else {
+              UIApplication.shared.openURL(url)
+          }
+      }
+    }
+  }
+  
+  func didTapAddress(address: String) {
+    if (!address.isEmpty) {
+      let geoCoder = CLGeocoder()
+      geoCoder.geocodeAddressString(address) { (placemarks, error) in
+          guard
+              let placemarks = placemarks,
+              let location = placemarks.first?.location
+          else {
+              print("[ERROR]: NO location found for: \(address)")
+              return
+          }
+          
+        let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: location.coordinate, addressDictionary: nil))
+        mapItem.name = "Destination"
+        mapItem.openInMaps(launchOptions: [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving])
+      }
+    }
   }
   
   func contactListViewDidTapMenu(_ contactListView: ContactListView) {
@@ -63,18 +177,14 @@ extension ContactListController {
     })
     
     let importAllAction: UIAlertAction = UIAlertAction(
-      title: NSLocalizedString("Import All Contacts", comment: ""),
-      style: .default ,
-      handler:{ (UIAlertAction)in
+      title: NSLocalizedString("Import All Contacts", comment: ""), style: .default, handler:{ (UIAlertAction)in
         // perform database operation to import all contacts from a resource file
-        DbHelper.shared.importAllContacts(formatInJSON: self.importStylePreference.caseInsensitiveCompare(DbHelper.importStyleJSON) == .orderedSame)
-        self.refreshListTable()
+        DbHelper.shared.importAllContacts()
+        self.refreshListTable(filterBy: nil)
     })
     
     let removeAllAction: UIAlertAction = UIAlertAction(
-      title: NSLocalizedString("Remove All Contacts", comment: ""),
-      style: .destructive,
-      handler:{ (UIAlertAction)in
+      title: NSLocalizedString("Remove All Contacts", comment: ""), style: .destructive, handler:{ (UIAlertAction)in
         self.removeData()
     })
     
@@ -88,20 +198,19 @@ extension ContactListController {
     mainAlert.addAction(removeAllAction)
     mainAlert.addAction(dismissAllAction)
     
-    self.present(mainAlert, animated: true, completion: {
-      
-    })
+    self.present(mainAlert, animated: true, completion: { })
   }
   
   func displayImportStyleMenu() {
     let importStyleAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     let xmlAction: UIAlertAction = UIAlertAction(title: NSLocalizedString("Import as XML", comment: ""),
                                                  style: .default , handler:{ (UIAlertAction)in
-      self.importStylePreference = DbHelper.importStyleXML
+      UserDefaults.standard.set(DbHelper.importStyleXML, forKey: DbHelper.keyImportTypePreference)
     })
     let jsonAction: UIAlertAction = UIAlertAction(title: NSLocalizedString("Import as JSON", comment: ""),
                                   style: .default, handler:{ (UIAlertAction)in
-      self.importStylePreference = DbHelper.importStyleJSON
+      UserDefaults.standard.set(DbHelper.importStyleJSON, forKey: DbHelper.keyImportTypePreference)
+
     })
     let dismissAction: UIAlertAction = UIAlertAction(title: NSLocalizedString("Dismiss", comment: ""),
                                   style: .cancel, handler:{ (UIAlertAction)in
@@ -112,13 +221,14 @@ extension ContactListController {
     importStyleAlert.addAction(dismissAction)
     
     // disable the currently selected option
-    if (importStylePreference.caseInsensitiveCompare(DbHelper.importStyleXML) == .orderedSame) {
-      xmlAction.isEnabled = false
-      jsonAction.isEnabled = true
-    }
-    else {
+    let formatInJSON: Bool = UserDefaults.standard.string(forKey: DbHelper.keyImportTypePreference)?.caseInsensitiveCompare(DbHelper.importStyleJSON) == .orderedSame
+    if (formatInJSON) {
       xmlAction.isEnabled = true
       jsonAction.isEnabled = false
+    }
+    else {
+      xmlAction.isEnabled = false
+      jsonAction.isEnabled = true
     }
     
     self.present(importStyleAlert, animated: true, completion: { })
@@ -128,58 +238,58 @@ extension ContactListController {
     let sortAlert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     let customerIdAction: UIAlertAction = UIAlertAction(title: NSLocalizedString("Sort by Customer ID", comment: ""),
                                   style: .default , handler:{ (UIAlertAction)in
-      self.sortPreference = DbHelper.tagCustomerId
-      self.refreshListTable()
+      UserDefaults.standard.set(DbHelper.tagCustomerId, forKey: DbHelper.keySortPreference)
+      self.refreshListTable(filterBy: nil)
     })
     let companyNameAction: UIAlertAction = UIAlertAction(title: NSLocalizedString("Sort by Company Name", comment: ""),
                                   style: .default , handler:{ (UIAlertAction)in
-      self.sortPreference = DbHelper.tagCompanyName
-      self.refreshListTable()
+      UserDefaults.standard.set(DbHelper.tagCompanyName, forKey: DbHelper.keySortPreference)
+      self.refreshListTable(filterBy: nil)
     })
     let contactNameAction: UIAlertAction = UIAlertAction(title: NSLocalizedString("Sort by Contact Name", comment: ""),
                                   style: .default , handler:{ (UIAlertAction)in
-      self.sortPreference = DbHelper.tagContactName
-      self.refreshListTable()
+      UserDefaults.standard.set(DbHelper.tagContactName, forKey: DbHelper.keySortPreference)
+      self.refreshListTable(filterBy: nil)
     })
     let contactTitleAction: UIAlertAction = UIAlertAction(title: NSLocalizedString("Sort by Contact Title", comment: ""),
                                   style: .default , handler:{ (UIAlertAction)in
-      self.sortPreference = DbHelper.tagContactTitle
-      self.refreshListTable()
+      UserDefaults.standard.set(DbHelper.tagContactTitle, forKey: DbHelper.keySortPreference)
+      self.refreshListTable(filterBy: nil)
     })
     let addressAction: UIAlertAction = UIAlertAction(title: NSLocalizedString("Sort by Address", comment: ""),
                                   style: .default , handler:{ (UIAlertAction)in
-      self.sortPreference = DbHelper.tagAddress
-      self.refreshListTable()
+      UserDefaults.standard.set(DbHelper.tagAddress, forKey: DbHelper.keySortPreference)
+      self.refreshListTable(filterBy: nil)
     })
     let cityAction: UIAlertAction = UIAlertAction(title: NSLocalizedString("Sort by City", comment: ""),
                                   style: .default , handler:{ (UIAlertAction)in
-      self.sortPreference = DbHelper.tagCity
-      self.refreshListTable()
+      UserDefaults.standard.set(DbHelper.tagCity, forKey: DbHelper.keySortPreference)
+      self.refreshListTable(filterBy: nil)
     })
     let emailAction: UIAlertAction = UIAlertAction(title: NSLocalizedString("Sort by Email", comment: ""),
                                   style: .default , handler:{ (UIAlertAction)in
-      self.sortPreference = DbHelper.tagEmail
-      self.refreshListTable()
+      UserDefaults.standard.set(DbHelper.tagEmail, forKey: DbHelper.keySortPreference)
+      self.refreshListTable(filterBy: nil)
     })
     let postalCodeAction: UIAlertAction = UIAlertAction(title: NSLocalizedString("Sort by Postal Code", comment: ""),
                                   style: .default , handler:{ (UIAlertAction)in
-      self.sortPreference = DbHelper.tagPostalCode
-      self.refreshListTable()
+      UserDefaults.standard.set(DbHelper.tagPostalCode, forKey: DbHelper.keySortPreference)
+      self.refreshListTable(filterBy: nil)
     })
     let countryAction: UIAlertAction = UIAlertAction(title: NSLocalizedString("Sort by Country", comment: ""),
                                   style: .default , handler:{ (UIAlertAction)in
-      self.sortPreference = DbHelper.tagCountry
-      self.refreshListTable()
+      UserDefaults.standard.set(DbHelper.tagCountry, forKey: DbHelper.keySortPreference)
+      self.refreshListTable(filterBy: nil)
     })
     let phoneAction: UIAlertAction = UIAlertAction(title: NSLocalizedString("Sort by Phone", comment: ""),
                                   style: .default , handler:{ (UIAlertAction)in
-      self.sortPreference = DbHelper.tagPhone
-      self.refreshListTable()
+      UserDefaults.standard.set(DbHelper.tagPhone, forKey: DbHelper.keySortPreference)
+      self.refreshListTable(filterBy: nil)
     })
     let faxAction: UIAlertAction = UIAlertAction(title: NSLocalizedString("Sort by Fax", comment: ""),
                                   style: .default , handler:{ (UIAlertAction)in
-      self.sortPreference = DbHelper.tagFax
-      self.refreshListTable()
+      UserDefaults.standard.set(DbHelper.tagFax, forKey: DbHelper.keySortPreference)
+      self.refreshListTable(filterBy: nil)
     })
     let dismissAction: UIAlertAction = UIAlertAction(title: NSLocalizedString("Dismiss", comment: ""),
                                   style: .cancel, handler:{ (UIAlertAction)in
@@ -199,43 +309,43 @@ extension ContactListController {
     sortAlert.addAction(dismissAction)
     
     // disable the currently selected sorting preference
-    if (sortPreference.caseInsensitiveCompare(DbHelper.tagCustomerId) == .orderedSame) {
+    let savedImportPref = UserDefaults.standard.string(forKey: DbHelper.keySortPreference)!
+    
+    if (savedImportPref.caseInsensitiveCompare(DbHelper.tagCustomerId) == .orderedSame) {
       customerIdAction.isEnabled = false
     }
-    else if (sortPreference.caseInsensitiveCompare(DbHelper.tagCompanyName) == .orderedSame) {
+    else if (savedImportPref.caseInsensitiveCompare(DbHelper.tagCompanyName) == .orderedSame) {
       companyNameAction.isEnabled = false
     }
-    else if (sortPreference.caseInsensitiveCompare(DbHelper.tagContactName) == .orderedSame) {
+    else if (savedImportPref.caseInsensitiveCompare(DbHelper.tagContactName) == .orderedSame) {
       contactNameAction.isEnabled = false
     }
-    else if (sortPreference.caseInsensitiveCompare(DbHelper.tagContactTitle) == .orderedSame) {
+    else if (savedImportPref.caseInsensitiveCompare(DbHelper.tagContactTitle) == .orderedSame) {
       contactTitleAction.isEnabled = false
     }
-    else if (sortPreference.caseInsensitiveCompare(DbHelper.tagAddress) == .orderedSame) {
+    else if (savedImportPref.caseInsensitiveCompare(DbHelper.tagAddress) == .orderedSame) {
       addressAction.isEnabled = false
     }
-    else if (sortPreference.caseInsensitiveCompare(DbHelper.tagCity) == .orderedSame) {
+    else if (savedImportPref.caseInsensitiveCompare(DbHelper.tagCity) == .orderedSame) {
       cityAction.isEnabled = false
     }
-    else if (sortPreference.caseInsensitiveCompare(DbHelper.tagEmail) == .orderedSame) {
+    else if (savedImportPref.caseInsensitiveCompare(DbHelper.tagEmail) == .orderedSame) {
       emailAction.isEnabled = false
     }
-    else if (sortPreference.caseInsensitiveCompare(DbHelper.tagPostalCode) == .orderedSame) {
+    else if (savedImportPref.caseInsensitiveCompare(DbHelper.tagPostalCode) == .orderedSame) {
       postalCodeAction.isEnabled = false
     }
-    else if (sortPreference.caseInsensitiveCompare(DbHelper.tagCountry) == .orderedSame) {
+    else if (savedImportPref.caseInsensitiveCompare(DbHelper.tagCountry) == .orderedSame) {
       countryAction.isEnabled = false
     }
-    else if (sortPreference.caseInsensitiveCompare(DbHelper.tagPhone) == .orderedSame) {
+    else if (savedImportPref.caseInsensitiveCompare(DbHelper.tagPhone) == .orderedSame) {
       phoneAction.isEnabled = false
     }
-    else if (sortPreference.caseInsensitiveCompare(DbHelper.tagFax) == .orderedSame) {
+    else if (savedImportPref.caseInsensitiveCompare(DbHelper.tagFax) == .orderedSame) {
       faxAction.isEnabled = false
     }
     
-    self.present(sortAlert, animated: true, completion: {
-      
-    })
+    self.present(sortAlert, animated: true, completion: { })
   }
   
 }

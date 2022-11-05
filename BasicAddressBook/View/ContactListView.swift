@@ -2,7 +2,8 @@
 //  ContactListView.swift
 //  BasicAddressBook
 //
-//  View layout for the Contact List Screen
+//  View layout for the Contact List Screen, contains list of ContactCellViews and captures
+//  when they are selected through ContactCellViewDelegate
 //
 
 import Foundation
@@ -11,13 +12,20 @@ import UIKit
 protocol ContactListViewDelegate: UIViewController {
   func contactListViewDidTapDrawer(_ contactListView: ContactListView)
   func contactListViewDidTapMenu(_ contactListView: ContactListView)
+  func contactListViewSearchTextChanged(_ contactListView: ContactListView, text: String)
+  func didTapEmail(email: String)
+  func didTapPhone(phone: String)
+  func didTapAddress(address: String)
+  func didTapContact(contact: ContactModel)
 }
 
-class ContactListView : UIView, UITableViewDelegate, UITableViewDataSource {
-  
+class ContactListView : UIView, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate,
+                        ContactCellViewDelegate {
+
   var titleLabel: UILabel!
   var contactTableView: UITableView?  // contains contact list
   let cellId: String = "cell_contact"
+  let searchBar: UISearchBar
   var contactListData: Array<ContactModel> = []
   weak var contactListControllerDelegate: ContactListViewDelegate?
   
@@ -26,8 +34,9 @@ class ContactListView : UIView, UITableViewDelegate, UITableViewDataSource {
   }
   
   override init (frame : CGRect) {
+    searchBar = UISearchBar.init(frame: frame)
     super.init(frame : frame)
-    backgroundColor = .white
+    backgroundColor = .clear
     
     // Title Label + top banner
     titleLabel = UIHelper.shared.labelWithWrappedHeight(
@@ -44,18 +53,6 @@ class ContactListView : UIView, UITableViewDelegate, UITableViewDataSource {
     topBannerView.isUserInteractionEnabled = false
     addSubview(topBannerView)
     addSubview(titleLabel)
-    
-    // ContactTableView
-    contactTableView = UITableView(frame: frame)
-    contactTableView?.isUserInteractionEnabled = true
-    contactTableView?.delegate = self
-    contactTableView?.dataSource = self
-    contactTableView?.backgroundColor = .clear
-    contactTableView?.tableHeaderView =
-    UIView.init(frame: CGRect(x: 0, y: 0, width: frame.width, height: 20))
-    UIHelper.shared.placeViewUnderWithPadding(padding: 0,
-                          changeView: contactTableView, topView: topBannerView)
-    addSubview(contactTableView!)
     
     // Menu Button
     let menuImage: UIImage = UIHelper.shared.menuButtonImage()
@@ -76,6 +73,26 @@ class ContactListView : UIView, UITableViewDelegate, UITableViewDataSource {
     drawerButton.isEnabled = true
     drawerButton.addTarget(self, action: #selector(self.didTapDrawer(_:)), for: UIControl.Event.touchUpInside)
     addSubview(drawerButton)
+    
+    // Search Bar
+    searchBar.sizeToFit()
+    searchBar.delegate = self
+    searchBar.setUnderView(topBannerView, withPadding: 0)
+    addSubview(searchBar)
+    
+    // ContactTableView
+    contactTableView = UITableView(frame: CGRectMake(0,0,frame.width,frame.height - topBannerView.frame.height))
+    contactTableView?.isUserInteractionEnabled = true
+    contactTableView?.delegate = self
+    contactTableView?.dataSource = self
+    contactTableView?.separatorColor = .clear
+    contactTableView?.backgroundColor = .white
+    contactTableView?.tableHeaderView =
+    UIView.init(frame: CGRect(x: 0, y: 0, width: frame.width, height: 10))
+    contactTableView?.setUnderView(searchBar, withPadding: 0)
+    contactTableView?.setHeight(height: frame.height - searchBar.frame.maxY)
+    ContactCellView.lWidth = (contactTableView?.frame.size.width)!*0.45; // required override
+    addSubview(contactTableView!)
   }
   
   @objc func didTapMenu(_ sender: UIButton!) { handleMenuTap() }
@@ -104,9 +121,7 @@ class ContactListView : UIView, UITableViewDelegate, UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    let cell: ContactCellView? =
-    tableView.dequeueReusableCell(withIdentifier: cellId) as? ContactCellView
-    return cell?.getHeight() ?? 320
+    return ContactCellView.getHeight(contact: contactListData[indexPath.row])
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -115,40 +130,41 @@ class ContactListView : UIView, UITableViewDelegate, UITableViewDataSource {
 
     if (cell == nil) {
       cell = ContactCellView(style: UITableViewCell.CellStyle.default, reuseIdentifier: cellId)
-    
-      // Add background colors
-      cell?.backgroundColor = UIColor.clear
-      let bgColorView = UIView()
-      bgColorView.backgroundColor = UIColor.white
-      cell?.selectedBackgroundView = bgColorView
-      
-      // Add tap gesture
-      let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapContact(_:)))
-      cell?.addGestureRecognizer(tapGesture)
+      cell?.contactListViewDelegate = self
     }
     
     cell?.tag = indexPath.row
     cell?.renderCellWithContact(contact: contactListData[indexPath.row])
     return cell!
   }
-  
-  @objc func didTapContact(_ sender: UITapGestureRecognizer? = nil) {
-    let cell: ContactCellView = sender?.view as! ContactCellView
-  
-    // Perform Menu item click
-    cell.isSelected = true
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-      cell.isSelected = false
-    }
-  }
 }
 
 extension ContactListView {
-  @objc
   fileprivate func handleDrawerTap() {
     contactListControllerDelegate?.contactListViewDidTapDrawer(self)
   }
+  
   fileprivate func handleMenuTap() {
     contactListControllerDelegate?.contactListViewDidTapMenu(self)
+  }
+  
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    contactListControllerDelegate?.contactListViewSearchTextChanged(self, text: searchText)
+  }
+  
+  func didTapContact(contact: ContactModel) {
+    contactListControllerDelegate?.didTapContact(contact: contact)
+  }
+  
+  func didTapEmailInCellView(email: String) {
+    contactListControllerDelegate?.didTapEmail(email: email)
+  }
+  
+  func didTapPhoneInCellView(phone: String) {
+    contactListControllerDelegate?.didTapPhone(phone: phone)
+  }
+  
+  func didTapAddressInCellView(address: String) {
+    contactListControllerDelegate?.didTapAddress(address: address)
   }
 }
