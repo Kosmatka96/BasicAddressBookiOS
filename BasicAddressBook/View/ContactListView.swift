@@ -81,7 +81,7 @@ class ContactListView : UIView, UITableViewDelegate, UITableViewDataSource, UISe
     addSubview(searchBar)
     
     // ContactTableView
-    contactTableView = UITableView(frame: CGRectMake(0,0,frame.width,frame.height - topBannerView.frame.height))
+    contactTableView = UITableView(frame: CGRect(0,0,frame.width,frame.height - topBannerView.frame.height))
     contactTableView?.isUserInteractionEnabled = true
     contactTableView?.delegate = self
     contactTableView?.dataSource = self

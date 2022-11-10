@@ -230,17 +230,17 @@ class ContactCellView : UITableViewCell {
     let hPadding = ContactCellView.labelHorizontalPadding
     
     // apply new frames to labels to make them wrap
-    customerIdLabel?.frame = CGRectMake(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: customerIdLabel?.text ?? "", font: labelFont, width: lWidth))
-    companyNameLabel?.frame = CGRectMake(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: companyNameLabel?.text ?? "", font: labelFont, width: lWidth))
-    contactNameLabel?.frame = CGRectMake(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: contactNameLabel?.text ?? "", font: labelFont, width: lWidth))
-    contactTitleLabel?.frame = CGRectMake(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: contactTitleLabel?.text ?? "", font: labelFont, width: lWidth))
-    addressLabel?.frame = CGRectMake(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: addressLabel?.text ?? "", font: labelFont, width: lWidth))
-    cityLabel?.frame = CGRectMake(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: cityLabel?.text ?? "", font: labelFont, width: lWidth))
-    emailLabel?.frame = CGRectMake(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: emailLabel?.text ?? "", font: labelFont, width: lWidth))
-    postalCodeLabel?.frame = CGRectMake(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: postalCodeLabel?.text ?? "", font: labelFont, width: lWidth))
-    countryLabel?.frame = CGRectMake(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: countryLabel?.text ?? "", font: labelFont, width: lWidth))
-    phoneLabel?.frame = CGRectMake(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: phoneLabel?.text ?? "", font: labelFont, width: lWidth))
-    faxLabel?.frame = CGRectMake(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: faxLabel?.text ?? "", font: labelFont, width: lWidth))
+    customerIdLabel?.frame = CGRect(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: customerIdLabel?.text ?? "", font: labelFont, width: lWidth))
+    companyNameLabel?.frame = CGRect(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: companyNameLabel?.text ?? "", font: labelFont, width: lWidth))
+    contactNameLabel?.frame = CGRect(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: contactNameLabel?.text ?? "", font: labelFont, width: lWidth))
+    contactTitleLabel?.frame = CGRect(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: contactTitleLabel?.text ?? "", font: labelFont, width: lWidth))
+    addressLabel?.frame = CGRect(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: addressLabel?.text ?? "", font: labelFont, width: lWidth))
+    cityLabel?.frame = CGRect(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: cityLabel?.text ?? "", font: labelFont, width: lWidth))
+    emailLabel?.frame = CGRect(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: emailLabel?.text ?? "", font: labelFont, width: lWidth))
+    postalCodeLabel?.frame = CGRect(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: postalCodeLabel?.text ?? "", font: labelFont, width: lWidth))
+    countryLabel?.frame = CGRect(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: countryLabel?.text ?? "", font: labelFont, width: lWidth))
+    phoneLabel?.frame = CGRect(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: phoneLabel?.text ?? "", font: labelFont, width: lWidth))
+    faxLabel?.frame = CGRect(ContactCellView.lWidth + hPadding, 0, ContactCellView.lWidth, UIHelper.shared.getLabelHeight(text: faxLabel?.text ?? "", font: labelFont, width: lWidth))
     
     // reposition labels in descending order
     customerIdLabel?.setY(ContactCellView.paddingPerCell) // manually set first label y position
@@ -268,7 +268,7 @@ class ContactCellView : UITableViewCell {
     preFaxLabel?.setUnderView(phoneLabel, withPadding: vPadding)
     
     // wrap container view to fit all elements
-    let containerFrame = CGRectMake(9, 5, UIScreen.main.bounds.width-18, (faxLabel?.frame.maxY)! + ContactCellView.paddingPerCell)
+    let containerFrame = CGRect(9, 5, UIScreen.main.bounds.width-18, (faxLabel?.frame.maxY)! + ContactCellView.paddingPerCell)
     UIHelper.shared.resizeStandardContainerView(view: containerView, frame: containerFrame)
     
     // reposition buttons if appropriate

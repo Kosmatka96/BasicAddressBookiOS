@@ -74,7 +74,7 @@ class DrawerController: UISplitViewController, DrawerViewDelegate,
       overlayView.alpha = (isMenuExpanded) ? 0.5 : 0.0
     }) { (success) in }
     
-    self.drawerView!.transform = CGAffineTransformIdentity;
+    self.drawerView!.transform = .identity
     drawerView!.animateLayout(isMenuExpanded: isMenuExpanded)
   }
   

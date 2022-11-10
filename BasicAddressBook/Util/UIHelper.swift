@@ -33,7 +33,7 @@ class UIHelper : NSObject {
   func labelWithWrappedHeight(pos: CGVector, text:String, font:UIFont, width:CGFloat) -> UILabel
   {
     let height: CGFloat = getLabelHeight(text: text, font: font, width: width)
-    let label: UILabel = UILabel(frame: CGRectMake(pos.dx, pos.dy, width, height))
+    let label: UILabel = UILabel(frame: CGRect(pos.dx, pos.dy, width, height))
     label.numberOfLines = 0
     label.lineBreakMode = NSLineBreakMode.byWordWrapping
     label.font = font
@@ -54,7 +54,7 @@ class UIHelper : NSObject {
     containerView.layer.shadowColor = .init(red: 0, green: 0, blue: 0, alpha: 1)
     containerView.layer.shadowOpacity = 1.0;
     containerView.layer.shadowRadius = 3.0;
-    containerView.layer.shadowOffset = CGSizeMake(0.5, 0.5);
+    containerView.layer.shadowOffset = CGSize(0.5, 0.5);
     containerView.layer.shadowPath = UIBezierPath.init(rect: containerView.bounds).cgPath
     containerView.layer.shouldRasterize = true;
     containerView.layer.rasterizationScale = UIScreen.main.scale
@@ -77,13 +77,13 @@ class UIHelper : NSObject {
   }
     
   func contactListImage() -> UIImage {
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(30, 30), false, 0.0);
+    UIGraphicsBeginImageContextWithOptions(CGSize(30, 30), false, 0.0);
     let aPath: UIBezierPath = UIBezierPath.init()
     UIColor.white.setStroke()
     aPath.lineWidth = 2.0
-    aPath.addArc(withCenter: CGPointMake(11.0, 11.0), radius: 7.0, startAngle: 0, endAngle: 360.0.radians, clockwise: true)
-    aPath.move(to: CGPointMake(16, 16))
-    aPath.addLine(to: CGPointMake(25, 25))
+    aPath.addArc(withCenter: CGPoint(11.0, 11.0), radius: 7.0, startAngle: 0, endAngle: 360.0.radians, clockwise: true)
+    aPath.move(to: CGPoint(16, 16))
+    aPath.addLine(to: CGPoint(25, 25))
     aPath.stroke()
     let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!;
     UIGraphicsEndImageContext();
@@ -91,18 +91,18 @@ class UIHelper : NSObject {
   }
   
   func createContactImage() -> UIImage {
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(30, 30), false, 0.0);
+    UIGraphicsBeginImageContextWithOptions(CGSize(30, 30), false, 0.0);
     let aPath: UIBezierPath = UIBezierPath.init()
     UIColor.white.setStroke()
     aPath.lineWidth = 2.0
-    aPath.addArc(withCenter: CGPointMake(12.0, 7.0), radius: 5.0, startAngle: 50.radians, endAngle: 130.radians, clockwise: false)
-    aPath.move(to: CGPointMake(19, 19.5))
-    aPath.addArc(withCenter: CGPointMake(12.0, 16.5), radius: 7.0, startAngle: 0.radians, endAngle: 180.radians, clockwise: false)
-    aPath.move(to: CGPointMake(1, 18))
-    aPath.addLine(to: CGPointMake(27, 26))
-    aPath.addLine(to: CGPointMake(20, 20))
-    aPath.move(to: CGPointMake(27, 27))
-    aPath.addLine(to: CGPointMake(18, 27))
+    aPath.addArc(withCenter: CGPoint(12.0, 7.0), radius: 5.0, startAngle: 50.radians, endAngle: 130.radians, clockwise: false)
+    aPath.move(to: CGPoint(19, 19.5))
+    aPath.addArc(withCenter: CGPoint(12.0, 16.5), radius: 7.0, startAngle: 0.radians, endAngle: 180.radians, clockwise: false)
+    aPath.move(to: CGPoint(1, 18))
+    aPath.addLine(to: CGPoint(27, 26))
+    aPath.addLine(to: CGPoint(20, 20))
+    aPath.move(to: CGPoint(27, 27))
+    aPath.addLine(to: CGPoint(18, 27))
     aPath.stroke()
     let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!;
     UIGraphicsEndImageContext();
@@ -110,12 +110,12 @@ class UIHelper : NSObject {
   }
   
   func menuButtonImage() -> UIImage {
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(44, 44), false, 0.0);
+    UIGraphicsBeginImageContextWithOptions(CGSize(44, 44), false, 0.0);
     let aPath: UIBezierPath = UIBezierPath.init()
     UIColor.white.setFill()
-    aPath.addArc(withCenter: CGPointMake(9, 22), radius: 3, startAngle: 0.radians, endAngle: 360.radians, clockwise: true)
-    aPath.addArc(withCenter: CGPointMake(18, 22), radius: 3, startAngle: 0.radians, endAngle: 360.radians, clockwise: true)
-    aPath.addArc(withCenter: CGPointMake(27, 22), radius: 3, startAngle: 0.radians, endAngle: 360.radians, clockwise: true)
+    aPath.addArc(withCenter: CGPoint(9, 22), radius: 3, startAngle: 0.radians, endAngle: 360.radians, clockwise: true)
+    aPath.addArc(withCenter: CGPoint(18, 22), radius: 3, startAngle: 0.radians, endAngle: 360.radians, clockwise: true)
+    aPath.addArc(withCenter: CGPoint(27, 22), radius: 3, startAngle: 0.radians, endAngle: 360.radians, clockwise: true)
     aPath.fill()
     let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!;
     UIGraphicsEndImageContext();
@@ -123,12 +123,12 @@ class UIHelper : NSObject {
   }
   
   func menuButtonImageHighlighted() -> UIImage {
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(44, 44), false, 0.0);
+    UIGraphicsBeginImageContextWithOptions(CGSize(44, 44), false, 0.0);
     let aPath: UIBezierPath = UIBezierPath.init()
     UIColor.gray.setFill()
-    aPath.addArc(withCenter: CGPointMake(9, 22), radius: 3, startAngle: 0.radians, endAngle: 360.radians, clockwise: true)
-    aPath.addArc(withCenter: CGPointMake(18, 22), radius: 3, startAngle: 0.radians, endAngle: 360.radians, clockwise: true)
-    aPath.addArc(withCenter: CGPointMake(27, 22), radius: 3, startAngle: 0.radians, endAngle: 360.radians, clockwise: true)
+    aPath.addArc(withCenter: CGPoint(9, 22), radius: 3, startAngle: 0.radians, endAngle: 360.radians, clockwise: true)
+    aPath.addArc(withCenter: CGPoint(18, 22), radius: 3, startAngle: 0.radians, endAngle: 360.radians, clockwise: true)
+    aPath.addArc(withCenter: CGPoint(27, 22), radius: 3, startAngle: 0.radians, endAngle: 360.radians, clockwise: true)
     aPath.fill()
     let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!;
     UIGraphicsEndImageContext();
@@ -143,7 +143,7 @@ extension UIView {
     frame = CGRect(x: originX, y: frame.origin.y, width: frame.size.width, height: frame.size.height)
   }
   func setY(_ y: CGFloat) {
-    frame = CGRectMake(frame.origin.x, y, frame.width, frame.height)
+    frame = CGRect(frame.origin.x, y, frame.width, frame.height)
   }
   func setWidth(width: CGFloat) {
     frame = CGRect(x: frame.origin.x, y: frame.origin.y, width: width, height: frame.size.height)
@@ -163,30 +163,30 @@ extension UIView {
   
   func animateButtonExpand() {
     UIView.animate(withDuration: 0.2, delay: 0.0) {
-      self.transform = CGAffineTransformMakeScale(2.2, 2.2);
+        self.transform = CGAffineTransform(scaleX: 2.2, y: 2.2)
     }
     UIView.animate(withDuration: 0.1, delay: 0.2) {
-      self.transform = CGAffineTransformMakeScale(1.0,1.0);
+        self.transform = CGAffineTransform(scaleX: 1.0,y: 1.0)
     }
   }
   
   func animateTap() {
     UIView.animate(withDuration: 0.115, delay: 0.0) {
-      self.transform = CGAffineTransformMakeScale(0.915,0.915);
+        self.transform = CGAffineTransform(scaleX: 0.915,y: 0.915)
     }
     UIView.animate(withDuration: 0.115, delay: 0.115) {
-      self.transform = CGAffineTransformMakeScale(1.0,1.0);
+        self.transform = CGAffineTransform(scaleX: 1.0,y: 1.0)
     }
   }
   
   func animateTapWithColor(selectColor: UIColor) {
     let originalColor = backgroundColor
     UIView.animate(withDuration: 0.115, delay: 0.0) {
-      self.transform = CGAffineTransformMakeScale(0.915,0.915);
+        self.transform = CGAffineTransform(scaleX: 0.915,y: 0.915)
       self.backgroundColor = selectColor
     }
     UIView.animate(withDuration: 0.115, delay: 0.115) {
-      self.transform = CGAffineTransformMakeScale(1.0,1.0);
+        self.transform = CGAffineTransform(scaleX: 1.0,y: 1.0)
     }
     UIView.animate(withDuration: 0, delay: 0.23) {
       self.backgroundColor = originalColor
@@ -196,14 +196,31 @@ extension UIView {
   func animateTapWithSubSelectionView(subSelectionView: UIView, selectColor: UIColor) {
     let originalColor = subSelectionView.backgroundColor
     UIView.animate(withDuration: 0.115, delay: 0.0) {
-      self.transform = CGAffineTransformMakeScale(0.915,0.915);
+        self.transform = CGAffineTransform(scaleX: 0.915,y: 0.915)
       subSelectionView.backgroundColor = selectColor
     }
     UIView.animate(withDuration: 0.115, delay: 0.115) {
-      self.transform = CGAffineTransformMakeScale(1.0,1.0);
+        self.transform = CGAffineTransform(scaleX: 1.0,y: 1.0)
     }
     UIView.animate(withDuration: 0, delay: 0.23) {
       subSelectionView.backgroundColor = originalColor
     }
   }
+}
+
+extension CGRect{
+    init(_ x:CGFloat,_ y:CGFloat,_ width:CGFloat,_ height:CGFloat) {
+        self.init(x:x,y:y,width:width,height:height)
+    }
+
+}
+extension CGSize{
+    init(_ width:CGFloat,_ height:CGFloat) {
+        self.init(width:width,height:height)
+    }
+}
+extension CGPoint{
+    init(_ x:CGFloat,_ y:CGFloat) {
+        self.init(x:x,y:y)
+    }
 }

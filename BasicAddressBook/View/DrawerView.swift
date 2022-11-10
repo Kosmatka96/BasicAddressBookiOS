@@ -28,7 +28,7 @@ class DrawerView: UIView, UITableViewDelegate, UITableViewDataSource {
   }
   
   override init (frame : CGRect) {
-    originalFrame = CGRectMake(frame.origin.x, frame.origin.y, frame.width * 2 / 3, frame.size.height)
+    originalFrame = CGRect(frame.origin.x, frame.origin.y, frame.width * 2 / 3, frame.size.height)
     super.init(frame : frame)
     
     // override view color and width
@@ -37,7 +37,7 @@ class DrawerView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     // Add a welcome image
     let welcomeImageView: UIImageView = UIImageView(image: UIImage(named: "address-icon"))
-    welcomeImageView.frame = CGRectMake(20, originalFrame.height*0.08, originalFrame.width*0.35, originalFrame.width*0.35)
+    welcomeImageView.frame = CGRect(20, originalFrame.height*0.08, originalFrame.width*0.35, originalFrame.width*0.35)
     addSubview(welcomeImageView)
     
     // Add a welcome label
